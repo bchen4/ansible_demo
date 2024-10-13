@@ -1,0 +1,2 @@
+[staging_servers]
+rocky_local ansible_connection=local

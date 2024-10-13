@@ -1,0 +1,36 @@
+- name: ensure auditing is enabled
+  hosts: test
+  become: true
+
+  tasks:
+    - name: 4.1.1.1 ensure auditd is installed
+      ansible.builtin.dnf:
+        name: audit
+        state: present
+
+    - name: 4.1.1.2 ensure auditing for processed that start prior to auditd is enabled get status
+      ansible.builtin.command: grubby --info=ALL
+      register: grub_audit_check
+     
+    - name: print grab audit check
+      ansible.builtin.debug:
+        msg: "{{ grub_audit_check }}"
+    - name: print when find result
+      ansible.builtin.debug:
+        msg: "{{ grub_audit_check.stdout.find('audit=1') }}"
+
+    - name: 4.1.1.2 check status and set audit to 1 if not set
+      ansible.builtin.command: grubby --update-kernel ALL --args 'audit=1'
+      when: grub_audit_check.stdout.find('audit=1') == -1
+    
+    - name: 4.1.1.3 ensure audit_backlog_limit is sufficient
+      ansible.builtin.command: grubby --info=ALL
+      register: grub_backlog_limit_res
+      
+    - name: print grub backlog limit result
+      ansible.builtin.debug: 
+        var: grub_backlog_limit_res
+
+    - name: 4.1.1.3 set limit to 8192 if it is not
+      ansible.builtin.command: grubby --update-kernel ALL --args 'audit_backlog_limit=8192'
+      when: grub_backlog_limit_res.stdout.find('audit_backlog_limit=8192') == -1
