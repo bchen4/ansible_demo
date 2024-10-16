@@ -1,0 +1,8 @@
+- name: disable usb storage
+  hosts: test
+
+  tasks:
+    - name: 1.1.9 disable usb storage
+      community.general.modprobe:
+        name: usb-storage
+        persistent: disable
