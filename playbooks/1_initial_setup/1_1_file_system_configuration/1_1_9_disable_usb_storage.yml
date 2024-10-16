@@ -5,4 +5,4 @@
     - name: 1.1.9 disable usb storage
       community.general.modprobe:
         name: usb-storage
-        persistent: disable
+        persistent: disabled
