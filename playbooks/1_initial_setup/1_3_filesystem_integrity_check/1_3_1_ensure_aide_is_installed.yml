@@ -1,0 +1,4 @@
+# 1. ensure aide is installed
+# 2. create mail server
+# 3. create a cron job to do aide --check regularly and send email if there is change
+# 4. ahuffman.aide role check github https://github.com/ahuffman/ansible-aide
